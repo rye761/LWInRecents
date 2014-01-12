@@ -1,5 +1,7 @@
 <resources>
 
     <string name="app_name">LWInRecents</string>
+    <string name="background_opacity">Background Opacity (0-255):  </string>
+    <string name="custom_opacity">Use Custom Background Opacity?</string>
 
 </resources>
