@@ -1,5 +1,6 @@
 package ryebread761.lwinrecents;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.widget.FrameLayout;
 import de.robv.android.xposed.IXposedHookInitPackageResources;
@@ -31,7 +32,8 @@ public class Main implements IXposedHookLoadPackage, IXposedHookInitPackageResou
     public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
         if (!resparam.packageName.equals("com.android.systemui"))
             return;
-        resparam.res.hookLayout("com.android.systemui", "layout", "status_bar_recent_panel", new XC_LayoutInflated() {
+        
+        XC_LayoutInflated hook = new XC_LayoutInflated() {
             @SuppressWarnings("deprecation")
             @Override
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
@@ -42,7 +44,16 @@ public class Main implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                     frame.setBackgroundColor(Color.argb(prefs.getInt("custom_opacity_value", 0), 0, 0, 0));
                 }
             }
-        });
+        };
+        
+        resparam.res.hookLayout("com.android.systemui", "layout", "status_bar_recent_panel", hook);
+        try {
+        	resparam.res.hookLayout("com.android.systemui", "layout", "tw_status_bar_recent_panel", hook);
+        } catch (Resources.NotFoundException e) {
+        	
+        } catch (Throwable t) {
+        	
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package ryebread761.lwinrecents;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,6 +17,8 @@ import android.widget.Toast;
  * as it seemed this would be a little easier.
  */
 
+@SuppressLint({ "ShowToast", "WorldReadableFiles" })
+@SuppressWarnings("deprecation")
 public class MainActivity extends Activity {
     private static final String PREF_NAME = "LWIRPrefs";
     private Toast toast;
@@ -28,7 +31,7 @@ public class MainActivity extends Activity {
         toast = Toast.makeText(this, "Changes set, please reboot.", Toast.LENGTH_LONG);
 
         CheckBox co = (CheckBox) findViewById(R.id.custom_opacity);
-        SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_WORLD_READABLE);
+		SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_WORLD_READABLE);
         co.setChecked(prefs.getBoolean("custom_opacity", false));
 
 
@@ -42,7 +45,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_WORLD_READABLE);
+				SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_WORLD_READABLE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("custom_opacity_value", opacity);
                 editor.commit();
@@ -69,7 +72,7 @@ public class MainActivity extends Activity {
 
         switch(view.getId()) {
             case R.id.custom_opacity:
-                SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_WORLD_READABLE);
+				SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_WORLD_READABLE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean("custom_opacity", checked);
                 editor.commit();
