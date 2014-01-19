@@ -76,17 +76,21 @@ public class Main implements IXposedHookLoadPackage, IXposedHookInitPackageResou
         			throws Throwable {
         		prefs.reload();
                 if (prefs.getBoolean("custom_opacity", false)) { 
-                    frame.setBackgroundDrawable(null);
-                    frame.setBackgroundColor(Color.argb(prefs.getInt("custom_opacity_value", 0), 0, 0, 0));
                     if (tw_frame != null) {
 	                    tw_frame.setBackgroundDrawable(null);
 	                    tw_frame.setBackgroundColor(Color.argb(prefs.getInt("custom_opacity_value", 0), 0, 0, 0));
-	                    XposedBridge.log("onResume occured, tw_frame background set");
+	                    XposedBridge.log("onResume occured, tw_frame background set (custom opacity)");
+                    } else {
+                    	frame.setBackgroundDrawable(null);
+                        frame.setBackgroundColor(Color.argb(prefs.getInt("custom_opacity_value", 0), 0, 0, 0));
                     }
                 } else {
-                	frame.setBackgroundDrawable(stockBackground);
-                	if (tw_frame != null)
+                	if (tw_frame != null) {
                 		tw_frame.setBackgroundDrawable(stockBackground);
+                		XposedBridge.log("onResume occured, tw_frame background set (stock background selected)");
+                	} else {
+                		frame.setBackgroundDrawable(stockBackground);
+                	}
                 }
         	}
         });
