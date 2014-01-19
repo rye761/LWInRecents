@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        toast = Toast.makeText(this, "Changes set, please reboot.", Toast.LENGTH_LONG);
+        toast = Toast.makeText(this, "Changes set!", Toast.LENGTH_LONG);
 
         CheckBox co = (CheckBox) findViewById(R.id.custom_opacity);
 		SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_WORLD_READABLE);
