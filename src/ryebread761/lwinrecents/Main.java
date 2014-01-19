@@ -9,6 +9,7 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam;
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
@@ -18,6 +19,7 @@ public class Main implements IXposedHookLoadPackage, IXposedHookInitPackageResou
     private static final String PREF_NAME = "LWIRPrefs";
     public XSharedPreferences prefs;
     public FrameLayout frame;
+    public FrameLayout tw_frame;
     public Drawable stockBackground;
     
 	@Override
@@ -38,9 +40,17 @@ public class Main implements IXposedHookLoadPackage, IXposedHookInitPackageResou
             }
         };
         
+        XC_LayoutInflated tw_hook = new XC_LayoutInflated() {
+            @Override
+            public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
+                tw_frame = (FrameLayout) liparam.view.findViewById(liparam.res.getIdentifier("recents_bg_protect", "id", "com.android.systemui"));
+                XposedBridge.log("tw_frame set");
+            }
+        };
+        
         resparam.res.hookLayout("com.android.systemui", "layout", "status_bar_recent_panel", hook);
         try {
-        	resparam.res.hookLayout("com.android.systemui", "layout", "tw_status_bar_recent_panel", hook);
+        	resparam.res.hookLayout("com.android.systemui", "layout", "tw_status_bar_recent_panel", tw_hook);
         } catch (Resources.NotFoundException e) {
         	
         } catch (Throwable t) {
@@ -68,8 +78,15 @@ public class Main implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                 if (prefs.getBoolean("custom_opacity", false)) { 
                     frame.setBackgroundDrawable(null);
                     frame.setBackgroundColor(Color.argb(prefs.getInt("custom_opacity_value", 0), 0, 0, 0));
+                    if (tw_frame != null) {
+	                    tw_frame.setBackgroundDrawable(null);
+	                    tw_frame.setBackgroundColor(Color.argb(prefs.getInt("custom_opacity_value", 0), 0, 0, 0));
+	                    XposedBridge.log("onResume occured, tw_frame background set");
+                    }
                 } else {
                 	frame.setBackgroundDrawable(stockBackground);
+                	if (tw_frame != null)
+                		tw_frame.setBackgroundDrawable(stockBackground);
                 }
         	}
         });
